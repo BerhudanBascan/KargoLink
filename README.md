@@ -1,152 +1,119 @@
-# 📦 CargoLink - Kargo ve Lojistik Platformu
+# KargoLink — Logistics Aggregation Platform (MVP)
 
-## 🎯 CargoLink Nedir?
+A centralized logistics MVP that aggregates multiple Turkish cargo carriers (Yurtiçi, Aras, MNG, and others) under a single API — enabling real-time pricing comparison, automated booking, and GPS-based shipment tracking.
 
-CargoLink, Türkiye'deki tüm kargo şirketlerini tek platformda birleştiren akıllı lojistik çözümüdür. Hem bireysel kullanıcılar hem de işletmeler için kargo gönderimi yapmayı kolay, ucuz ve güvenli hale getirir.
+## What it does
 
-## 🚀 Ne Yapabilirsiniz?
+Instead of manually checking each carrier's website or calling their APIs separately, KargoLink normalizes all carrier APIs behind a unified interface. A single request returns sorted price/ETA quotes from all integrated carriers. The customer picks one, the system books it, and tracking events are aggregated in real time.
 
-### 📱 **Mobil Uygulama ile:**
-- **Anında Fiyat Karşılaştırma**: Yurtiçi, Aras, MNG ve diğer kargo firmalarının fiyatlarını saniyeler içinde karşılaştırın
-- **Tek Tıkla Gönderim**: En uygun fiyata paketinizi gönderin
-- **Canlı Takip**: Paketinizin nerede olduğunu gerçek zamanlı takip edin
-- **Akıllı Adres Defteri**: Sık kullandığınız adresleri kaydedin
-- **Hızlı Ödeme**: Güvenli ödeme seçenekleriyle anında öde
+**Core flows:**
+- Price comparison: query N carriers in parallel, normalize and rank results
+- Booking automation: place order with selected carrier via their API
+- Shipment tracking: poll carrier tracking endpoints, unify status codes
+- Admin panel: carrier management, pricing rules, user support dashboard
+- Bulk shipping: Excel import for multi-shipment corporate orders
 
-### 💻 **Web Sitesi ile:**
-- **Toplu Gönderim**: İşletmeniz için çok sayıda paketi tek seferde organize edin
-- **Fatura Yönetimi**: Tüm gönderimlerinizin faturalarını tek yerden görün
-- **Raporlama**: Aylık/yıllık kargo harcamalarınızı analiz edin
-- **Kurumsal Hesap**: İşletmeniz için özel indirimler ve avantajlar
+## Tech Stack
 
-### 🎛️ **Admin Panel ile:**
-- **Sistem Yönetimi**: Tüm platformu kontrol edin
-- **Kargo Firmalarını Yönetin**: Yeni firmalar ekleyin, fiyatları güncelleyin
-- **Kullanıcı Desteği**: Müşteri sorunlarını çözün
-- **İstatistikler**: Platform performansını takip edin
+| Layer | Tech |
+|-------|------|
+| Frontend | React, TypeScript, Tailwind CSS |
+| Backend | Node.js, Express |
+| Database | PostgreSQL |
+| Real-time | REST polling + webhook receivers |
+| Auth | JWT |
+| Deployment | Docker |
 
----
-
-## 🏁 Nasıl Başlayabilirsiniz?
-
-### 📲 **Mobil Uygulama Kullanıcısı İseniz:**
-
-1. **Kayıt Olun**
-   - Telefon numaranızla hızla kayıt olun
-   - E-posta adresinizi doğrulayın
-
-2. **İlk Gönderiminizi Yapın**
-   - Göndereceğiniz paketin bilgilerini girin
-   - Alıcı adresini yazın
-   - Otomatik fiyat teklifi alın
-
-3. **Kargo Firmasını Seçin**
-   - En uygun fiyat ve teslimat süresini seçin
-   - Ödemenizi yapın
-
-4. **Paketi Takip Edin**
-   - Anlık bildirimler alın
-   - Paketinizin yolculuğunu canlı izleyin
-
-### 🌐 **Web Sitesi Kullanıcısı İseniz:**
-
-1. **Hesap Oluşturun**
-   - Bireysel veya kurumsal hesap açın
-   - İşletme bilgilerinizi tamamlayın
-
-2. **Dashboard'u Keşfedin**
-   - Tüm gönderimlerinizi tek ekranda görün
-   - Hızlı eylem butonlarını kullanın
-
-3. **Toplu Gönderim Yapın**
-   - Excel ile çoklu adres yükleyin
-   - Tüm paketleri tek seferde organize edin
-
----
-
-## ⭐ Temel Özellikler
-
-### 💰 **Akıllı Fiyatlandırma**
-- **Otomatik Karşılaştırma**: 15+ kargo firmasının fiyatları otomatik karşılaştırılır
-- **En İyi Fiyat Garantisi**: Her zaman en uygun seçeneği bulun
-- **Özel İndirimler**: Kurumsal müşteriler için özel oranlar
-
-### 📍 **Akıllı Takip**
-- **Gerçek Zamanlı Konum**: GPS ile canlı konum takibi
-- **Akıllı Bildirimler**: SMS ve push notification ile anlık bilgiler
-- **Tahmin Algoritması**: Teslimat saatini önceden tahmin eder
-
-### 🛡️ **Güvenlik**
-- **SSL Şifreleme**: Tüm bilgileriniz güvende
-- **Güvenli Ödeme**: 256-bit şifreleme ile korunmuş ödemeler
-- **Veri Koruma**: KVKK uyumlu veri işleme
-
-### 🎁 **Ekstra Hizmetler**
-- **Sigorta**: Paketinizi sigortala, güvende olsun
-- **Kapıda Ödeme**: Alıcıdan tahsil et
-- **Özel Teslimat**: Randevulu teslimat seçenekleri
-
----
-
-## 📊 Nasıl Çalışır?
+## Project Structure
 
 ```
-1️⃣ Paket Bilgileri → 2️⃣ Fiyat Karşılaştırma → 3️⃣ Kargo Seçimi → 4️⃣ Ödeme → 5️⃣ Takip
+kargolink/
+├── frontend/          # React + TypeScript SPA
+│   ├── src/
+│   │   ├── pages/     # Dashboard, Shipments, Tracking, Admin
+│   │   ├── components/
+│   │   └── api/       # API client layer
+│   └── package.json
+│
+├── backend/           # Node.js REST API
+│   ├── src/
+│   │   ├── routes/    # /quotes, /bookings, /tracking, /carriers
+│   │   ├── services/
+│   │   │   ├── quotingService.ts    # Parallel carrier queries
+│   │   │   ├── bookingService.ts    # Order placement
+│   │   │   └── trackingService.ts   # Status aggregation
+│   │   ├── adapters/  # Per-carrier API adapters (Yurtici, Aras, MNG...)
+│   │   └── server.ts
+│   └── package.json
+│
+└── docker-compose.yml
 ```
 
-### **Detaylı Süreç:**
+## API Overview
 
-**📝 Adım 1: Gönderim Talebi**
-- Paket boyutu, ağırlığı ve değerini girin
-- Gönderici ve alıcı adreslerini belirtin
+```http
+POST /api/quotes          # Get price quotes from all carriers
+POST /api/bookings        # Book shipment with selected carrier
+GET  /api/tracking/:id    # Unified tracking status
+GET  /api/carriers        # List available carriers
+POST /api/bulk            # Bulk shipment upload (Excel)
+```
 
-**🔍 Adım 2: Akıllı Eşleştirme**
-- Sistem tüm kargo firmalarına otomatik teklif ister
-- Fiyat, hız ve güvenilirlik skorlarına göre sıralar
+**Quote request example:**
+```json
+{
+  "origin": "34000",
+  "destination": "06000",
+  "weight": 2.5,
+  "dimensions": { "w": 20, "h": 15, "d": 10 }
+}
+```
 
-**✅ Adım 3: Seçim ve Onay**
-- Size en uygun seçeneği belirtin
-- Ödeme bilgilerinizi girin
+**Quote response:**
+```json
+{
+  "quotes": [
+    { "carrier": "Yurtici", "price": 45.90, "eta_days": 1, "service": "Express" },
+    { "carrier": "Aras", "price": 38.50, "eta_days": 2, "service": "Standard" },
+    { "carrier": "MNG", "price": 41.00, "eta_days": 2, "service": "Standard" }
+  ]
+}
+```
 
-**📦 Adım 4: Kargo Alımı**
-- Kurye paketinizi adresinizden alır
-- Sistem otomatik takip kodunu oluşturur
+## Setup
 
-**📱 Adım 5: Canlı Takip**
-- Her adımda bildirim alırsınız
-- Teslimat anında onay fotoğrafı gelir
+```bash
+# Backend
+cd backend
+npm install
+cp .env.example .env   # Add DB credentials and carrier API keys
+npm run dev            # http://localhost:3001
 
----
+# Frontend
+cd frontend
+npm install
+npm run dev            # http://localhost:5173
 
-## 🎯 Kimler Kullanabilir?
+# Docker (full stack)
+docker-compose up -d
+```
 
-### 👤 **Bireysel Kullanıcılar**
-- **Ev taşıma** yapanlar
-- **Online alışveriş** yapanlar  
-- **Hediye gönderen** kişiler
-- **İkinci el satış** yapanlar
+### Environment variables
 
-### 🏢 **İşletmeler**
-- **E-ticaret** mağazaları
-- **Üretici** firmalar
-- **Dağıtım** şirketleri
-- **Küçük-orta ölçekli** işletmeler
+```env
+DATABASE_URL=postgresql://user:pass@localhost:5432/kargolink
+JWT_SECRET=your_secret
 
-### 🚚 **Kargo Firmaları**
-- Daha fazla müşteriye ulaşmak isteyenler
-- Kapasite optimizasyonu yapanlar
-- Dijital dönüşüm hedefleyenler
+# Carrier API keys
+YURTICI_API_KEY=
+ARAS_API_KEY=
+MNG_API_KEY=
+```
 
----
+## Status
 
-## 💡 Neden CargoLink?
+MVP — core quoting, booking, and tracking flows are implemented. Carrier adapters cover the three major Turkish carriers. Admin panel handles carrier management and shipment history. Bulk upload via Excel is functional.
 
-| Geleneksel Yöntem | CargoLink ile |
-|-------------------|---------------|
-| ❌ Tek tek arama | ✅ Otomatik karşılaştırma |
-| ❌ Uzun bekleme | ✅ Anında fiyat |
-| ❌ Kağıt evraklar | ✅ Dijital süreç |
-| ❌ Takip sorunu | ✅ Canlı konum |
-| ❌ Yüksek fiyat | ✅ En iyi fiyat garantisi |
+## License
 
---- MVP----
+MIT
